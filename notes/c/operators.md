@@ -238,7 +238,7 @@ a = 1, b = 2;
 | 10         | `^`                                                      | Left → Right  |
 | 11         | `\|`                                                     | Left → Right  |
 | 12         | `&&`                                                     | Left → Right  |
-| 13         | `\|`                                                     | Left → Right  |
+| 13         | `\|\|`                                                   | Left → Right  |
 | 14         | `?:`                                                     | Right → Left  |
 | 15         | `=` `+=` `-=` `*=` `/=` `%=` `&=` `\|=` `^=` `<<=` `>>=` | Right → Left  |
 | 16         | `,`                                                      | Left → Right  |
