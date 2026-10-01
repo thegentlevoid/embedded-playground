@@ -50,6 +50,9 @@ The `<stdio.h>` header provides functions and types for:
 | [`vfprintf()`](#vfprintf)   | `int vfprintf(FILE * restrict stream, const char * restrict format, va_list arg);`                   | Writes formatted output to a stream using a `va_list`.                   |
 | [`vsprintf()`](#vsprintf)   | `int vsprintf(char * restrict s, const char * restrict format, va_list arg);`                        | Writes formatted output to a string using a `va_list`.                   |
 | [`vsnprintf()`](#vsnprintf) | `int vsnprintf(char * restrict s, size_t n, const char * restrict format, va_list arg);`             | Writes formatted output to a string with a size limit using a `va_list`. |
+| [`vscanf()`](#vscanf)       | `int vscanf(const char * restrict format, va_list arg);`                                             | Reads formatted input from `stdin` using a `va_list`.                    |
+| [`vfscanf()`](#vfscanf)     | `int vfscanf(FILE * restrict stream, const char * restrict format, va_list arg);`                    | Reads formatted input from a stream using a `va_list`.                   |
+| [`vsscanf()`](#vsscanf)     | `int vsscanf(char * restrict s, const char * restrict format, va_list arg);`                         | Reads formatted input from a string using a `va_list`.                   |
 | [`fread()`](#fread)         | `size_t fread(void * restrict ptr, size_t size, size_t nmemb, FILE * restrict stream);`              | Reads an array of objects from a stream.                                 |
 | [`fwrite()`](#fwrite)       | `size_t fwrite(const void * restrict ptr, size_t size, size_t nmemb, FILE * restrict stream);`       | Writes an array of objects to a stream.                                  |
 | [`fseek()`](#fseek)         | `int fseek(FILE *stream, long int offset, int whence);`                                              | Changes the file position.                                               |
@@ -798,19 +801,24 @@ It returns `EOF` if the input string ends before the first conversion can be per
 
 The `v` versions of the formatted I/O functions accept a `va_list`.
 
-They are mainly useful when implementing your own variadic functions.
+They are mainly used for writing “wrapper” functions that accept a variable number of arguments.
+
+For example below is the function `errorf()` which is similar to `printf()` but adds `Error: ` to the beginning of it's output and always writes to `stderr` instead of `stdout`
 
 ```c
 #include <stdio.h>
 #include <stdarg.h>
 
-void log_message(const char *format, ...)
+void errorf(const char *format, ...)
 {
-    va_list args;
-
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
+	va_list ap;
+	va_start(ap, format);
+	
+	fprintf(stderr, "Error: ");
+	vfprintf(stderr, format, ap);
+	fprintf(stderr, "\n");
+	
+	va_end(ap);
 }
 ```
 
@@ -821,6 +829,9 @@ vprintf()
 vfprintf()
 vsprintf()
 vsnprintf()
+vscanf()
+vfscanf()
+vsscanf()
 ```
 
 See [[stdarg]] for information about `va_list`, `va_start()`, and `va_end()`.
@@ -835,6 +846,8 @@ Writes formatted output to `stdout` using a `va_list`.
 
 It returns the number of characters transmitted on success, or a negative value if an output or encoding error occurs.
 
+---
+
 ## `vfprintf()`
 
 ```c
@@ -844,6 +857,8 @@ int vfprintf(FILE * restrict stream, const char * restrict format, va_list arg);
 Writes formatted output to a specified stream using a `va_list`.
 
 It returns the number of characters transmitted on success, or a negative value if an output or encoding error occurs.
+
+---
 
 ## `vsprintf()`
 
@@ -857,6 +872,8 @@ It has the same buffer-overflow concerns as `sprintf()`.
 
 It returns the number of characters that would have been written, excluding the terminating `'\0'`, or a negative value on error.
 
+---
+
 ## `vsnprintf()`
 
 ```c
@@ -866,6 +883,42 @@ int vsnprintf(char * restrict s, size_t n, const char * restrict format, va_list
 Writes formatted output to a character array with a size limit using a `va_list`.
 
 It returns the number of characters that would have been written, excluding the terminating `'\0'`, or a negative value on error.
+
+---
+
+## `vscanf()`
+
+```c
+int vscanf(const char * restrict format, va_list arg);
+```
+
+Reads formatted input from `stdin` using a `va_list`.
+
+Returns the number of input items successfully assigned, or `EOF` if an input failure occurs before the first conversion.
+
+---
+
+## `vfscanf()`
+
+```c
+int vfscanf(FILE * restrict stream, const char * restrict format, va_list arg);
+```
+
+Reads formatted input from a specified stream using a `va_list`.
+
+Returns the number of input items successfully assigned, or `EOF` if an input failure occurs before the first conversion.
+
+---
+
+## `vsscanf()`
+
+```c
+int vsscanf(char * restrict s, const char * restrict format, va_list arg);
+```
+
+Reads formatted input from a character array using a `va_list`.
+
+Returns the number of input items successfully assigned, or `EOF` if an input failure occurs before the first conversion.
 
 ---
 
