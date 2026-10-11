@@ -59,7 +59,7 @@ The goal is not just to write code, but to understand how embedded systems work 
 * [ ] 12 - Watchdog
 * [ ] 13 - Interrupts
 * [ ] 14 - DMA
-* [ ] 15 - Cloak Management
+* [ ] 15 - Clock Management
 * [ ] XX - Power Management
 * [ ] XX - Bootloader / DFU (Device Firmware Update)
 
